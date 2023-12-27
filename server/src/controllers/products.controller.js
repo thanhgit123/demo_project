@@ -1,6 +1,8 @@
 const {
   addProductMySQL,
   getAllProductsMySQL,
+  updateProductMySQL,
+  getEditProduct,
 } = require("../service/products.service");
 async function getAllProducts(req, res) {
   try {
@@ -27,8 +29,38 @@ async function addProduct(req, res) {
     console.log(error);
   }
 }
+async function updateProduct(req, res) {
+  console.log(req.body);
+  try {
+    const { id } = req.params;
+    const { name_product, price, image, stock, description, category_id } =
+      req.body;
+    const result = await updateProductMySQL(
+      name_product,
+      price,
+      image,
+      stock,
+      description,
+      category_id,
+      id
+    );
+    res.status(200).json({
+      message: "Cap nhat san pham thanh cong",
+      result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function editProduct(req, res) {
+  const { id } = req.params;
+  const result = await getEditProduct(id);
+  return res.status(200).json({ data: result });
+}
 
 module.exports = {
   getAllProducts,
   addProduct,
+  updateProduct,
+  editProduct,
 };
