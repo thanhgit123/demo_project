@@ -7,6 +7,17 @@ async function getAllProductsMySQL() {
     console.log(error);
   }
 }
+async function getProductsByName(name) {
+  try {
+    const [products] = await db.execute(
+      `select * from products where name_product like '%${name}%'`
+    );
+    console.log(products);
+    return products;
+  } catch (error) {
+    console.log(error);
+  }
+}
 async function addProductMySQL(newProduct) {
   const { name_product, price, image, stock, description, category_id } =
     newProduct;
@@ -34,27 +45,28 @@ async function updateProductMySQL(
       "update products set name_product = ?, price = ?, image = ?, stock = ?, description = ?, category_id = ? where product_id = ?",
       [name_product, price, image, stock, description, category_id, product_id]
     );
-    return result;
+    console.log(result);
+    return result.insertId;
   } catch (error) {
     console.log(error);
   }
 }
-async function getEditProduct(product_id) {
+
+async function deleteProductMySql(id) {
   try {
     const [result] = await db.execute(
-      "select * from products join category on products.category_id = category.category_id where product_id = ?",
-      [product_id]
+      "delete from products where product_id = ?",
+      [id]
     );
-
-    return result[0];
+    return result.insertId;
   } catch (error) {
     console.log(error);
   }
 }
-
 module.exports = {
+  getProductsByName,
   getAllProductsMySQL,
   addProductMySQL,
   updateProductMySQL,
-  getEditProduct,
+  deleteProductMySql,
 };

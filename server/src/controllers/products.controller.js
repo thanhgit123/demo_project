@@ -3,11 +3,22 @@ const {
   getAllProductsMySQL,
   updateProductMySQL,
   getEditProduct,
+  deleteProductMySql,
+  getProductsByName,
 } = require("../service/products.service");
 async function getAllProducts(req, res) {
   try {
     const products = await getAllProductsMySQL();
     res.status(200).json(products);
+  } catch (error) {
+    console.log(error);
+  }
+}
+async function getProductsBySearch(req, res) {
+  const { key } = req.query;
+  try {
+    const result = await getProductsByName(key);
+    res.status(200).json(result);
   } catch (error) {
     console.log(error);
   }
@@ -44,9 +55,10 @@ async function updateProduct(req, res) {
       category_id,
       id
     );
+    const products = await getAllProductsMySQL();
     res.status(200).json({
-      message: "Cap nhat san pham thanh cong",
-      result,
+      message: "Sua san pham thanh cong",
+      products,
     });
   } catch (error) {
     console.log(error);
@@ -55,12 +67,28 @@ async function updateProduct(req, res) {
 async function editProduct(req, res) {
   const { id } = req.params;
   const result = await getEditProduct(id);
-  return res.status(200).json({ data: result });
+  const products = await getAllProductsMySQL();
+  res.status(200).json({
+    message: "Sua san pham thanh cong",
+    products,
+  });
 }
-
+async function deleteProduct(req, res) {
+  const { id } = req.params;
+  console.log(id);
+  const result = await deleteProductMySql(id);
+  console.log(result);
+  const products = await getAllProductsMySQL();
+  res.status(200).json({
+    message: "Xoa san pham thanh cong",
+    products,
+  });
+}
 module.exports = {
   getAllProducts,
+  getProductsBySearch,
   addProduct,
   updateProduct,
   editProduct,
+  deleteProduct,
 };

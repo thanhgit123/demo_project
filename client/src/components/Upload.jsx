@@ -7,12 +7,13 @@ export default function Upload() {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
   const [newProduct, setNewProduct] = useState({
     name_product: "",
     price: 0,
     image: null,
     description: "",
-    category_id: 0,
+    category_id: "",
     stock: 0,
   });
   const handleGetCategories = async () => {
@@ -75,19 +76,27 @@ export default function Upload() {
         `/api/v1/products/${newProduct.product_id}`,
         newProduct
       );
-
+      console.log(response);
       setProducts(response.data.products);
     } catch (error) {}
   };
-  const [choose, setChoose] = useState("category");
   const handleEdit = async (item) => {
-    const response = await publicAxios.get(
-      `/api/v1/editProduct/${item.product_id}`
-    );
-    setChoose(response.data.data.name_category);
-    setNewProduct(response.data.data);
+    setNewProduct(item);
   };
-
+  const handleDelete = async (id) => {
+    try {
+      const response = await publicAxios.delete(`/api/v1/deleteProduct/${id}`);
+      setProducts(response.data.products);
+    } catch (error) {}
+  };
+  const handleSearch = async () => {
+    try {
+      const response = await publicAxios.get(
+        `/api/v1/products/search?key=${search}`
+      );
+      setProducts(response.data);
+    } catch (error) {}
+  };
   return (
     <>
       <h1>Upload</h1>
@@ -95,8 +104,12 @@ export default function Upload() {
         <div className="w-1/3">
           <input type="file" onChange={handleAddMedia} />
           <img src={preview} alt="" width={100} />
-          <select name="category_id" onChange={handleGetValue}>
-            <option value="">{choose}</option>
+          <select
+            name="category_id"
+            onChange={handleGetValue}
+            value={newProduct.category_id}
+          >
+            <option value="">Chon the loai</option>
             {categories.map((category) => (
               <option value={category.category_id}>
                 {category.name_category}
@@ -144,6 +157,16 @@ export default function Upload() {
           <button onClick={newProduct.product_id ? handleSave : handleAdd}>
             Add
           </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <input
+              type="text"
+              className="border border-sky-500"
+              name="search_Product"
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+            />
+            <button onClick={handleSearch}>Search</button>
+          </div>
         </div>
         <div className="w-2/3">
           <table></table>
@@ -158,7 +181,7 @@ export default function Upload() {
               <button className="px-[20px]" onClick={() => handleEdit(item)}>
                 sua
               </button>
-              <button>xoa</button>
+              <button onClick={() => handleDelete(item.product_id)}>xoa</button>
             </div>
           ))}
         </div>
