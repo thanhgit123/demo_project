@@ -16,11 +16,19 @@ import Admin from "./pages/admin/Admin";
 import Checkout from "./pages/checkout/Checkout";
 import ProductDetail from "./pages/productDetail/ProductDetail";
 import Upload from "./components/Upload";
+import Products from "./components/Products";
+import Signup from "./components/Signup";
+import LoginDemo from "./components/Login";
+import CartDemo from "./components/cart";
 export default function App() {
   return (
     <>
       <Routes>
         <Route path="/upload" element={<Upload />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/login" element={<LoginDemo />}></Route>
+        <Route path="/signup" element={<Signup />}></Route>
+        <Route path="/cartDemo" element={<CartDemo />}></Route>
         <Route
           path="/"
           element={

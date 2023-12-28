@@ -41,7 +41,6 @@ async function addProduct(req, res) {
   }
 }
 async function updateProduct(req, res) {
-  console.log(req.body);
   try {
     const { id } = req.params;
     const { name_product, price, image, stock, description, category_id } =
@@ -64,20 +63,18 @@ async function updateProduct(req, res) {
     console.log(error);
   }
 }
-async function editProduct(req, res) {
-  const { id } = req.params;
-  const result = await getEditProduct(id);
-  const products = await getAllProductsMySQL();
-  res.status(200).json({
-    message: "Sua san pham thanh cong",
-    products,
-  });
-}
+// async function editProduct(req, res) {
+//   const { id } = req.params;
+//   const result = await getEditProduct(id);
+//   const products = await getAllProductsMySQL();
+//   res.status(200).json({
+//     message: "Sua san pham thanh cong",
+//     products,
+//   });
+// }
 async function deleteProduct(req, res) {
   const { id } = req.params;
-  console.log(id);
   const result = await deleteProductMySql(id);
-  console.log(result);
   const products = await getAllProductsMySQL();
   res.status(200).json({
     message: "Xoa san pham thanh cong",
@@ -89,6 +86,5 @@ module.exports = {
   getProductsBySearch,
   addProduct,
   updateProduct,
-  editProduct,
   deleteProduct,
 };
